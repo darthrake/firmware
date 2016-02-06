@@ -275,6 +275,14 @@ void HAL_USART_BeginConfig(HAL_USART_Serial serial, uint32_t baud, uint32_t conf
 	// Configure USART
 	USART_Init(usartMap[serial]->usart_peripheral, &USART_InitStructure);
 
+	// LINMODE
+	if (config & 0b11000000) {
+		USART_LINCmd(usartMap[serial]->usart_peripheral, ENABLE);
+		USART_LINBreakDetectLengthConfig(usartMap[serial]->usart_peripheral, (config & 0b10000000) ? USART_LINBreakDetectLength_10b : USART_LINBreakDetectLength_11b);
+	} else {
+		USART_LINCmd(usartMap[serial]->usart_peripheral, DISABLE);
+	}
+
 	// Enable the USART
 	USART_Cmd(usartMap[serial]->usart_peripheral, ENABLE);
 
